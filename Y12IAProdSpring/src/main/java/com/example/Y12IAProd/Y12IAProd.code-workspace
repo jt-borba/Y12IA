@@ -1,0 +1,30 @@
+{
+	"folders": [
+		{
+			"name": "Y12IAProd",
+			"path": "../../../../../../../../Y12IAProd"
+		},
+		{
+			"name": "Y12IAProdSpring",
+			"path": "../../../../../.."
+		}
+	],
+	"settings": {
+		"sqltools.connections": [
+			{
+				"mysqlOptions": {
+					"authProtocol": "default",
+					"enableSsl": "Disabled"
+				},
+				"previewLimit": 50,
+				"server": "localhost",
+				"port": 3306,
+				"driver": "MySQL",
+				"name": "logindev",
+				"database": "loginsys",
+				"username": "root",
+				"password": "Ellie123100!"
+			}
+		]
+	}
+}
