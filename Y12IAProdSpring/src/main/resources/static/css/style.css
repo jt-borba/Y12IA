@@ -1,0 +1,11 @@
+body{
+    background: white;
+}
+h1{
+    color: blue;
+}
+#login-wrapper{
+    padding:20px;
+    width:500px;
+    margin: auto;
+}
