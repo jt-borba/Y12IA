@@ -32,10 +32,4 @@ public class MainController {
     public String pass() {
         return "html/pass.html"; // contact.html in templates folder
     }
-
-    @GetMapping("/reporting")
-    public String reporting() {
-        return "html/reporting.html"; // contact.html in templates folder
-    }
-
 }

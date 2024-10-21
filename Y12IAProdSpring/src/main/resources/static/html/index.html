@@ -1,27 +1,55 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="/css/style.css">        
-        <script src="/Users/jt.borba/Y12IA/Y12IAProdSpring/src/main/resources/static/js/scripts.js"></script>
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <link rel="stylesheet" type="text/css" href="/css/style.css">     
+
+    <script src="/js/script.js"></script>
+
     </head>
     <body>
-        <h1>Please Login to Access the Attendance System</h1>
-        <div id="login-wrapper">
-            <div id="email-header">
-                <h2>Email</h2>
-            </div>
-            <div id="email-input">
-                <input type="text">
-            </div>
-            <div id="studentCode-header">
-                <h2>Student Number</h2>
-            </div>
-            <div id="studentCode-input">
-                <input type="text">
-            </div>
-            <div id="login-button">
-                <button type="submit">Login</button>
+        <a href="#login-modal" class="btn orange modal-trigger">Log In</a>
+
+        <!-- Login Modal -->
+        <div class="modal" id="login-modal">
+            <div class="modal-content">
+                <div class="center-align">
+                    <h4 class="flow-text">Account Login</h1>
+                    <p>Login to access your account dashboard</p>
+                    <form>
+                        <div class="input-field">
+                            <input type="email" id="email">
+                            <label for="email">Email</label>
+                        </div>
+                        <div class="input-field">
+                            <input type="password" class="password">
+                            <label for="password">Student ID</label>
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <a href="#!" class="modal-action modal-close btn blue">
+                            <i class="fa fa-lock"></i> Log In</a>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.modal').modal();
+            $('.modal').modal({
+                dismissible: false
+            });
+            $('.modal').modal('open'); 
+        });
+    </script>
 </html>

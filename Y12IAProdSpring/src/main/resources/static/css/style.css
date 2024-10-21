@@ -1,11 +1,17 @@
+/*!
+ * Materialize v1.0.0 (http://materializecss.com)
+ * Copyright 2014-2017 Materialize
+ * MIT License (https://raw.githubusercontent.com/Dogfalo/materialize/master/LICENSE)
+ */
 body{
-    background: white;
+  background: white;
 }
 h1{
-    color: blue;
+  color: blue;
 }
-#login-wrapper{
-    padding:20px;
-    width:500px;
-    margin: auto;
+.login-wrapper{
+  padding:20px;
+  width:500px;
+  margin: auto;
 }
+
