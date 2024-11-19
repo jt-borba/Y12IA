@@ -14,7 +14,7 @@
 
     </head>
     <body>
-        <a href="#login-modal" class="btn orange modal-trigger">Log In</a>
+        
 
         <!-- Login Modal -->
         <div class="modal" id="login-modal">
@@ -39,6 +39,10 @@
                 </div>
             </div>
         </div>
+        <div id="calendarInit" class="center-align">
+            <input type="text" class="datepicker">
+            <input type="text" class="timepicker">
+        </div>
     </body>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Compiled and minified JavaScript -->
@@ -50,6 +54,12 @@
                 dismissible: false
             });
             $('.modal').modal('open'); 
+            $('.datepicker').datepicker();
+            $('.datepicker').datepicker({
+                autoClose: false,
+                disableWeekends: true
+            });
+            $('.timepicker').timepicker();
         });
     </script>
 </html>
