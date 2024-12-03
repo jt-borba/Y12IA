@@ -32,18 +32,20 @@
                 <div class="center-align">
                     <h4 class="flow-text">Account Login</h1>
                     <p>Login to access your account dashboard</p>
-                    <form id="loginForm">
+                    <form action="/login" method="post" id="loginForm">
                         <div class="input-field">
-                            <input type="email" id="email" name="email">
+                            <input type="email" id="email" name="email" placeholder="Email">
                             <label for="email">Email</label>
                         </div>
                         <div class="input-field">
-                            <input type="password" class="password" name="password">
+                            <input type="password" class="password" name="password" placeholder="Student ID">
                             <label for="password">Student ID</label>
                         </div>
+
                         <div class="modal-footer">
-                            <a href="#!" class="modal-action modal-close btn blue">
-                                <i class="fa fa-lock"></i>Log In</a>
+                            <!--<a href="#!" class="modal-action modal-close btn blue">
+                                <i class="fa fa-lock"></i>Log In</a>-->
+                            <input type="submit" value="Log In" class="modal-action modal-close btn blue">
                         </div>
                     </form>
                     <div id="errorMessages"></div>
