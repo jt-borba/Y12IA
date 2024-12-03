@@ -2,7 +2,9 @@ package com.example.Y12IAProd;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -54,9 +56,10 @@ public class MainController {
         }
         return "html/error.html";
     }
-
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public String loginFormSubmission() {
-        return "redirect:/html/error-404.html";
+    public String loginFormSubmission(@RequestBody MultiValueMap values) {
+        log.info(values.toString());
+
+        return "redirect:/html/index.html";
     }
 }
