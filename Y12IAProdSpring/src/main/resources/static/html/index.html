@@ -96,7 +96,7 @@
 
         if (!password.value.trim() || !isStrongPassword(password.value)) {
             displayError(
-            "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
+            "Student ID must contain six numbers ex. 104563"
             );
             return;
         }
@@ -114,7 +114,7 @@
         }
 
         function isStrongPassword(password) {
-        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/.test(password);
+        return /^\d{6}$/.test(password);
         }
     </script>
 </html>

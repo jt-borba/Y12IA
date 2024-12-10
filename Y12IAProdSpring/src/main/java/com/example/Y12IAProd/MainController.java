@@ -58,7 +58,7 @@ public class MainController {
     }
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String loginFormSubmission(@RequestBody MultiValueMap values) {
-        log.info(values.toString());
+        //log.info(values.toString());
 
         return "redirect:/html/index.html";
     }
