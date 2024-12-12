@@ -1,4 +1,3 @@
-SELECT * FROM Users;
-ORDER BY year DESC;
+SELECT * FROM Users WHERE year = 107;
 
 
