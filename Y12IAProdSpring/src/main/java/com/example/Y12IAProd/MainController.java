@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.Map;
+
 
 @Controller
 public class MainController {
@@ -57,9 +59,15 @@ public class MainController {
         return "html/error.html";
     }
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public String loginFormSubmission(@RequestBody MultiValueMap values) {
-        //log.info(values.toString());
-
-        return "redirect:/html/index.html";
+    public String loginFormSubmission(@RequestBody MultiValueMap<String, String> values) {
+        APIController.ValidationResult result = APIController.validateCredentials(values.toSingleValueMap());
+    
+        if (result.isValid) {
+            // Redirect to a success page or dashboard
+            return "redirect:/profile";
+        } else {
+            // Redirect back to login page with an error
+            return "redirect:/?error=Invalid Credentials";
+        }
     }
 }

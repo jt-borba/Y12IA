@@ -34,17 +34,14 @@
                     <p>Login to access your account dashboard</p>
                     <form action="/login" method="post" id="loginForm">
                         <div class="input-field">
-                            <input type="email" id="email" name="email" placeholder="Email">
+                            <input type="email" id="email" name="email" placeholder="Email" required>
                             <label for="email">Email</label>
                         </div>
                         <div class="input-field">
-                            <input type="password" class="password" name="password" placeholder="Student ID">
+                            <input type="password" class="password" name="password" placeholder="Student ID" required>
                             <label for="password">Student ID</label>
                         </div>
-
                         <div class="modal-footer">
-                            <!--<a href="#!" class="modal-action modal-close btn blue">
-                                <i class="fa fa-lock"></i>Log In</a>-->
                             <input type="submit" value="Log In" class="modal-action modal-close btn blue">
                         </div>
                     </form>
@@ -80,27 +77,21 @@
         const loginForm = document.getElementById("loginForm");
         const errorMessages = document.getElementById("errorMessages");
 
-        loginForm.addEventListener("click", function (event) {
-    
+        loginForm.addEventListener("submit", function (event) {
+            const { email, password } = loginForm.elements;
+            errorMessages.innerHTML = "";
 
-        const {email, password } = loginForm.elements;
-        /*var emailInput = loginForm.getElementById(email);
-        var passwordInput = loginForm.getElementById(password);*/
+            if (!email.value.trim() || !isValidEmail(email.value)) {
+                event.preventDefault();
+                displayError("Please enter a valid email address.");
+                return;
+            }
 
-        errorMessages.innerHTML = "";
-
-        if (!email.value.trim() || !isValidEmail(email.value)) {
-            displayError("Please enter a valid email address.");
-            return;
-        }
-
-        if (!password.value.trim() || !isStrongPassword(password.value)) {
-            displayError(
-            "Student ID must contain six numbers ex. 104563"
-            );
-            return;
-        }
-        
+            if (!password.value.trim() || !isStrongPassword(password.value)) {
+                event.preventDefault();
+                displayError("Student ID must contain six numbers, e.g., 104563");
+                return;
+            }
         });
 
         function displayError(message) {
@@ -113,6 +104,12 @@
 
         function isStrongPassword(password) {
         return /^\d{6}$/.test(password);
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get("error");
+        if (error) {
+            displayError(error);
         }
     </script>
 </html>

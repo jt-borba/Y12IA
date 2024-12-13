@@ -24,3 +24,4 @@ hs_err_pid*
 replay_pid*
 
 Y12IAProdSpring/src/main/java/com/example/Y12IAProd/Y12IAProd.code-workspace
+/src/main/resources/application.properties
