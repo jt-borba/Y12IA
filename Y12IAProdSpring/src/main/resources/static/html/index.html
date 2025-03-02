@@ -42,7 +42,7 @@
                             <label for="password">Student ID</label>
                         </div>
                         <div class="modal-footer">
-                            <input type="submit" value="Log In" class="modal-action modal-close btn blue">
+                            <input type="submit" value="Log In" class="btn blue">
                         </div>
                     </form>
                     <div id="errorMessages"></div>
@@ -57,59 +57,71 @@
         </div>
     </body>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <!-- Compiled and minified JavaScript -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        $(document).ready(function(){
-            $('.modal').modal();
-            $('.modal').modal({
-                dismissible: false
-            });
-            $('.modal').modal('open'); 
-            $('.datepicker').datepicker();
-            $('.datepicker').datepicker({
-                autoClose: false,
-                disableWeekends: true
-            });
-            $('.timepicker').timepicker();
-        });
+    $(document).ready(function(){
+        $('.modal').modal({ dismissible: false });
+        $('.modal').modal('open'); 
+        $('.datepicker').datepicker({ autoClose: false, disableWeekends: true });
+        $('.timepicker').timepicker();
+    });
 
-        const loginForm = document.getElementById("loginForm");
-        const errorMessages = document.getElementById("errorMessages");
+    const loginForm = document.getElementById("loginForm");
+    const errorMessages = document.getElementById("errorMessages");
 
-        loginForm.addEventListener("submit", function (event) {
-            const { email, password } = loginForm.elements;
-            errorMessages.innerHTML = "";
+    loginForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        errorMessages.innerHTML = "";
+        const email = loginForm.elements.email.value;
+        const password = loginForm.elements.password.value;
 
-            if (!email.value.trim() || !isValidEmail(email.value)) {
-                event.preventDefault();
-                displayError("Please enter a valid email address.");
-                return;
+        if (!email.trim() || !isValidEmail(email)) {
+            displayError("Please enter a valid email address.");
+            return;
+        }
+        if (!password.trim() || !isStrongPassword(password)) {
+            displayError("Student ID must contain six numbers, e.g., 104563");
+            return;
+        }
+
+        $.ajax({
+        url: '/login',
+        method: 'POST',
+        data: $(loginForm).serialize(), // form-encoded data
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
+            if (response.valid) {
+            $('#login-modal').modal('close');
+            // Optionally update the UI for logged-in state.
+            } else {
+            displayError(response.error || "Invalid credentials");
             }
-
-            if (!password.value.trim() || !isStrongPassword(password.value)) {
-                event.preventDefault();
-                displayError("Student ID must contain six numbers, e.g., 104563");
-                return;
-            }
+        },
+        error: function() {
+            displayError("An error occurred during login.");
+        }
         });
+    });
 
-        function displayError(message) {
+    function displayError(message) {
         errorMessages.innerHTML += `<div class="error">${message}</div>`;
-        }
+    }
 
-        function isValidEmail(email) {
+    function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        }
+    }
 
-        function isStrongPassword(password) {
+    function isStrongPassword(password) {
         return /^\d{6}$/.test(password);
-        }
+    }
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const error = urlParams.get("error");
-        if (error) {
-            displayError(error);
-        }
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get("error");
+    if (error) {
+        displayError(error);
+    }
     </script>
+
+    
 </html>

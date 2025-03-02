@@ -1,73 +1,41 @@
 package com.example.Y12IAProd;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
-
+import java.util.HashMap;
 import java.util.Map;
-
 
 @Controller
 public class MainController {
-    
+
+    @Autowired
+    private APIController apiController;
+
     @RequestMapping("/")
     public String index() {
-        return "html/index.html"; // Redirect to static index.html
+        return "html/index.html";
     }
 
-    @GetMapping("/profile")
-    public String profile() {
-        return "html/profile.html"; // about.html in static folder
-    }
+    // Other mappings ...
 
-    @GetMapping("/contact")
-    public String contact() {
-        return "html/contact.html"; // contact.html in static folder
-    }
-
-    @GetMapping("/nav")
-    public String nav() {
-        return "html/nav.html"; // contact.html in static folder
-    }
-
-    @GetMapping("/pass")
-    public String pass() {
-        return "html/pass.html"; // contact.html in static folder
-    }
-
-    @GetMapping("/error")
-    public String handleError(HttpServletRequest request) {
-        Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-        
-        if (status != null) {
-            Integer statusCode = Integer.valueOf(status.toString());
-        
-            if(statusCode == HttpStatus.NOT_FOUND.value()) {
-                return "html/error-404.html";
-            }
-            else if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-                return "html/error-500.html";
-            }
-        }
-        return "html/error.html";
-    }
-    @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public String loginFormSubmission(@RequestBody MultiValueMap<String, String> values) {
-        APIController.ValidationResult result = APIController.validateCredentials(values.toSingleValueMap());
-    
+    @RequestMapping(path = "/login", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public Map<String, Object> loginFormSubmission(@RequestParam Map<String, String> values) {
+        APIController.ValidationResult result = apiController.validateCredentials(values);
+        Map<String, Object> response = new HashMap<>();
         if (result.isValid) {
-            // Redirect to a success page or dashboard
-            return "redirect:/profile";
+            response.put("valid", true);
+            response.put("year", result.yearValue);
         } else {
-            // Redirect back to login page with an error
-            return "redirect:/?error=Invalid Credentials";
+            response.put("valid", false);
+            response.put("error", "Invalid credentials");
         }
+        return response;
     }
 }

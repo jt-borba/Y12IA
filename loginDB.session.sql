@@ -1,1 +1,4 @@
-SELECT * FROM Users
+SELECT * 
+FROM Users 
+WHERE email = 'jt.borba@ucc.on.ca' 
+  AND id = 107942;
