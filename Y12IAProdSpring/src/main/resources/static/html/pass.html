@@ -1,6 +1,54 @@
 <!DOCTYPE html>
 <html>
-    <body>
+<head>
+  <title>Pass</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+  <nav class="nav-wrapper indigo darken-4">
+    <a href="/" class="brand-logo">Logo</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a href="/pass"><i class="material-icons">event</i></a></li>
+      <li><a href="/contact"><i class="material-icons">email</i></a></li>
+      <li><a href="/profile"><i class="material-icons">person</i></a></li>
+    </ul>
+  </nav>  
 
-    </body>
+  <div class="container">
+    <h4>Pass</h4>
+    <div id="passStatus" class="center-align">
+      <!-- We'll set color/text dynamically via JS -->
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Fetch attendance status from the server
+      $.get('/getAttendanceStatus', function(data) {
+        if (!data.status) {
+          $('#passStatus').html('<div class="red white-text">No recent submission found</div>');
+          return;
+        }
+        let html = '';
+        if (data.status === 'approved') {
+          html = `<div style="background-color:green;color:white;padding:20px;">
+                   Approved<br>${data.date} ${data.time}
+                  </div>`;
+        } else if (data.status === 'submitted') {
+          html = `<div style="background-color:yellow;color:black;padding:20px;">
+                   Submitted (1 Attempt)<br>${data.date} ${data.time}
+                  </div>`;
+        } else if (data.status === 'rejected') {
+          html = `<div style="background-color:red;color:white;padding:20px;">
+                   Rejected<br>${data.date} ${data.time}
+                  </div>`;
+        }
+        $('#passStatus').html(html);
+      });
+    });
+  </script>
+</body>
 </html>

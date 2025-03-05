@@ -1,127 +1,153 @@
 <!DOCTYPE html>
 <html>
-    <head>
+<head>
+  <title>Attendance Reporting</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav-wrapper indigo darken-4">
+    <a href="/" class="brand-logo">Logo</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a href="/pass"><i class="material-icons">event</i></a></li>
+      <li><a href="/contact"><i class="material-icons">email</i></a></li>
+      <li><a href="/profile"><i class="material-icons">person</i></a></li>
+    </ul>
+  </nav>  
 
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Login Modal -->
+  <div class="modal" id="login-modal">
+    <div class="modal-content">
+      <div class="center-align">
+        <h4 class="flow-text">Account Login</h4>
+        <p>Login to access your account dashboard</p>
+        <form action="/login" method="post" id="loginForm">
+          <div class="input-field">
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <label for="email">Email</label>
+          </div>
+          <div class="input-field">
+            <input type="password" class="password" name="password" placeholder="Student ID" required>
+            <label for="password">Student ID</label>
+          </div>
+          <div class="modal-footer">
+            <input type="submit" value="Log In" class="btn blue">
+          </div>
+        </form>
+        <div id="errorMessages"></div>
+      </div>
+    </div>
+  </div>
 
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!-- Attendance Reporting Section -->
+  <div class="container" id="attendanceSection" style="display:none;">
+    <h4>Report Attendance</h4>
+    <!-- Materialize datepicker -->
+    <div class="input-field">
+      <input type="text" class="datepicker" id="attendanceDate" placeholder="Choose a date">
+      <label for="attendanceDate">Date</label>
+    </div>
 
-    <link rel="stylesheet" type="text/css" href="/css/style.css">     
+    <!-- Time dropdown -->
+    <div class="input-field">
+      <select id="timeSelect">
+      </select>
+      <label>Time</label>
+    </div>
 
-    <script src="/js/script.js"></script>
+    <!-- Submit Button -->
+    <button id="submitAttendance" class="btn">Submit Attendance</button>
+  </div>
 
-    </head>
-    <body>
-        
-        <nav>
-            <div class="nav-wrapper indigo darken-4">
-                <a href="#" class="brand-logo">Logo</a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="pass.html"><i class="material-icons">event</i></a></li>
-                    <li><a href="contact.html"><i class="material-icons">email</i></a></li>
-                    <li><a href="profile.html"><i class="material-icons">person</i></a></li>
-                </ul>
-            </div>
-        </nav>
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    // Materialize Init
+    $(document).ready(function() {
+      $('.modal').modal({ dismissible: false });
+      // Check if user is logged in. If not, open the modal. If yes, hide modal and show attendance form.
+      $('.modal').modal('open');
 
-        <!-- Login Modal -->
-        <div class="modal" id="login-modal">
-            <div class="modal-content">
-                <div class="center-align">
-                    <h4 class="flow-text">Account Login</h1>
-                    <p>Login to access your account dashboard</p>
-                    <form action="/login" method="post" id="loginForm">
-                        <div class="input-field">
-                            <input type="email" id="email" name="email" placeholder="Email" required>
-                            <label for="email">Email</label>
-                        </div>
-                        <div class="input-field">
-                            <input type="password" class="password" name="password" placeholder="Student ID" required>
-                            <label for="password">Student ID</label>
-                        </div>
-                        <div class="modal-footer">
-                            <input type="submit" value="Log In" class="btn blue">
-                        </div>
-                    </form>
-                    <div id="errorMessages"></div>
-                    
+      $('.datepicker').datepicker({
+        autoClose: true,
+        disableWeekends: false, // or true if needed
+        showDaysInNextAndPreviousMonths: true
+      });
 
-                </div>
-            </div>
-        </div>
-        <div id="calendarInit" class="center-align">
-            <input type="text" class="datepicker">
-            <input type="text" class="timepicker">
-        </div>
-    </body>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-    $(document).ready(function(){
-        $('.modal').modal({ dismissible: false });
-        $('.modal').modal('open'); 
-        $('.datepicker').datepicker({ autoClose: false, disableWeekends: true });
-        $('.timepicker').timepicker();
+      // Initialize select
+      $('select').formSelect();
+
+      // Populate time dropdown
+      const timeSelect = document.getElementById("timeSelect");
+      let startHour = 8, startMinute = 30;
+      while (startHour < 16 || (startHour === 16 && startMinute === 0)) {
+        let hh = String(startHour).padStart(2, '0');
+        let mm = String(startMinute).padStart(2, '0');
+        let timeStr = `${hh}:${mm}`;
+        let option = new Option(timeStr, timeStr);
+        timeSelect.add(option);
+        startMinute += 15;
+        if (startMinute === 60) {
+          startMinute = 0;
+          startHour++;
+        }
+      }
+      $('select').formSelect(); // re-init after adding options
+
+      // Submit attendance
+      $('#submitAttendance').click(function() {
+        const chosenDate = $('#attendanceDate').val();
+        const chosenTime = $('#timeSelect').val();
+        if (!chosenDate || !chosenTime) {
+          alert("Please select both a date and time.");
+          return;
+        }
+        $.post('/submitAttendance', { date: chosenDate, time: chosenTime }, function(response) {
+          if (response.success) {
+            alert("Attendance submitted successfully!");
+          } else {
+            alert("Error submitting attendance.");
+          }
+        });
+      });
     });
 
     const loginForm = document.getElementById("loginForm");
     const errorMessages = document.getElementById("errorMessages");
 
     loginForm.addEventListener("submit", function(event) {
-        event.preventDefault();
-        errorMessages.innerHTML = "";
-        const email = loginForm.elements.email.value;
-        const password = loginForm.elements.password.value;
+      event.preventDefault();
+      errorMessages.innerHTML = "";
+      const email = loginForm.elements.email.value;
+      const password = loginForm.elements.password.value;
 
-        if (!email.trim() || !isValidEmail(email)) {
-            displayError("Please enter a valid email address.");
-            return;
-        }
-        if (!password.trim() || !isStrongPassword(password)) {
-            displayError("Student ID must contain six numbers, e.g., 104563");
-            return;
-        }
-
-        $.ajax({
+      $.ajax({
         url: '/login',
         method: 'POST',
-        data: $(loginForm).serialize(), // form-encoded data
+        data: $(loginForm).serialize(),
         dataType: 'json',
         success: function(response) {
-            console.log(response);
-            if (response.valid) {
+          if (response.valid) {
             $('#login-modal').modal('close');
-            // Optionally update the UI for logged-in state.
-            } else {
+            // Show attendance form
+            document.getElementById("attendanceSection").style.display = "block";
+          } else {
             displayError(response.error || "Invalid credentials");
-            }
+          }
         },
         error: function() {
-            displayError("An error occurred during login.");
+          displayError("An error occurred during login.");
         }
-        });
+      });
     });
 
     function displayError(message) {
-        errorMessages.innerHTML += `<div class="error">${message}</div>`;
+      errorMessages.innerHTML += `<div class="error">${message}</div>`;
     }
-
-    function isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-    function isStrongPassword(password) {
-        return /^\d{6}$/.test(password);
-    }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const error = urlParams.get("error");
-    if (error) {
-        displayError(error);
-    }
-    </script>
-
-    
+  </script>
+</body>
 </html>
