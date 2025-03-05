@@ -24,4 +24,10 @@ public class AttendanceScheduler {
         int updated = jdbcTemplate.update(sql);
         System.out.println("Auto-rejected " + updated + " attendance submission(s).");
     }
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void autoClearAttendance() {
+        String sql = "DELETE FROM Attendance";
+        int rowsDeleted = jdbcTemplate.update(sql);
+        System.out.println("Auto-cleared Attendance table. Deleted " + rowsDeleted + " row(s).");
+    }    
 }

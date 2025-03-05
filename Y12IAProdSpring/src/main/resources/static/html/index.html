@@ -6,17 +6,46 @@
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Custom navbar height */
+    .navbar-custom {
+      background-color: #1D3D66; /* UCC-like blue */
+      height: 64px;             /* Typical Materialize nav height */
+    }
+    /* Let .nav-wrapper match the full navbar height */
+    .navbar-custom .nav-wrapper {
+      height: 100%;
+    }
+    /* Override brand-logo defaults so the image can fill the navbar height */
+    .navbar-custom .brand-logo {
+      height: 100%;
+      line-height: 0;           /* Prevent text-based vertical centering */
+      display: flex;
+      align-items: center;
+      padding-left: 10px;       /* Optional spacing from left edge */
+    }
+    /* Make the image fill the navbar height */
+    .navbar-custom .brand-logo img {
+      height: 100%;
+      width: auto;              /* Keep aspect ratio */
+    }
+  </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="nav-wrapper indigo darken-4">
-    <a href="/" class="brand-logo">Logo</a>
+
+<nav class="navbar-custom">
+  <div class="nav-wrapper">
+    <!-- Brand logo link -->
+    <a href="/" class="brand-logo">
+      <img src="/UCCLogo.jpg" alt="UCC Logo">
+    </a>
     <ul id="nav-mobile" class="right hide-on-med-and-down">
       <li><a href="/pass"><i class="material-icons">event</i></a></li>
       <li><a href="/contact"><i class="material-icons">email</i></a></li>
       <li><a href="/profile"><i class="material-icons">person</i></a></li>
     </ul>
-  </nav>  
+  </div>
+</nav>
 
   <!-- Login Modal -->
   <div class="modal" id="login-modal">

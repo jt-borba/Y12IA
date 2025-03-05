@@ -5,6 +5,33 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    /* Styling for the status card */
+    .status-card {
+      width: 200px;
+      height: 300px;
+      border-radius: 12px;
+      margin: 2rem auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+    .approved {
+      background-color: #4CAF50; /* Green */
+      color: white;
+    }
+    .submitted {
+      background-color: #FFC107; /* Yellow */
+      color: black;
+    }
+    .rejected {
+      background-color: #F44336; /* Red */
+      color: white;
+    }
+  </style>
 </head>
 <body>
   <nav class="nav-wrapper indigo darken-4">
@@ -16,10 +43,11 @@
     </ul>
   </nav>  
 
-  <div class="container">
+  <div class="container center-align">
     <h4>Pass</h4>
-    <div id="passStatus" class="center-align">
-      <!-- We'll set color/text dynamically via JS -->
+    <!-- The card that will display status -->
+    <div id="passStatus" class="status-card">
+      <h5>Loading...</h5>
     </div>
   </div>
 
@@ -29,24 +57,34 @@
       // Fetch attendance status from the server
       $.get('/getAttendanceStatus', function(data) {
         if (!data.status) {
-          $('#passStatus').html('<div class="red white-text">No recent submission found</div>');
+          $('#passStatus').removeClass().addClass('status-card rejected')
+                        .html('<h5>No Submission</h5><p>---</p><p>---</p>');
           return;
         }
-        let html = '';
+        let statusClass = '';
+        let statusTitle = '';
         if (data.status === 'approved') {
-          html = `<div style="background-color:green;color:white;padding:20px;">
-                   Approved<br>${data.date} ${data.time}
-                  </div>`;
+          statusClass = 'approved';
+          statusTitle = 'Approved';
         } else if (data.status === 'submitted') {
-          html = `<div style="background-color:yellow;color:black;padding:20px;">
-                   Submitted (1 Attempt)<br>${data.date} ${data.time}
-                  </div>`;
+          statusClass = 'submitted';
+          statusTitle = 'Submitted (1 Attempt)';
         } else if (data.status === 'rejected') {
-          html = `<div style="background-color:red;color:white;padding:20px;">
-                   Rejected<br>${data.date} ${data.time}
-                  </div>`;
+          statusClass = 'rejected';
+          statusTitle = 'Rejected';
+        } else {
+          statusClass = 'rejected';
+          statusTitle = 'Unknown';
         }
-        $('#passStatus').html(html);
+
+        $('#passStatus')
+          .removeClass()
+          .addClass('status-card ' + statusClass)
+          .html(`
+            <h5>${statusTitle}</h5>
+            <p>${data.time}</p>
+            <p>${data.date}</p>
+          `);
       });
     });
   </script>
