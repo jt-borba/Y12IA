@@ -43,7 +43,7 @@ public class MainController {
         if (result.isValid) {
             response.put("valid", true);
             response.put("year", result.yearValue);
-            // Save a user identifier in session (here, we use the student ID)
+            // Save something to remember user for future use
             session.setAttribute("userId", Integer.parseInt(values.get("password").trim()));
         } else {
             response.put("valid", false);

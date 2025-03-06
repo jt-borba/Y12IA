@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Attendance Reporting</title>
+  <!--Import Google Icon Font + Materialize CSS-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <!-- Login Modal -->
+  <div class="modal" id="login-modal">
+    <div class="modal-content">
+      <div class="center-align">
+        <h4 class="flow-text">Account Login</h4>
+        <p>Login to access your account dashboard</p>
+        <form action="/login" method="post" id="loginForm">
+          <div class="input-field">
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <label for="email">Email</label>
+          </div>
+          <div class="input-field">
+            <input type="password" class="password" name="password" placeholder="Student ID" required>
+            <label for="password">Student ID</label>
+          </div>
+          <div class="modal-footer">
+            <input type="submit" value="Log In" class="btn blue">
+          </div>
+        </form>
+        <div id="errorMessages"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Attendance Reporting Section -->
+  <div class="container" id="attendanceSection" style="display:none;">
+    <h4>Report Attendance</h4>
+    <!-- Materialize datepicker -->
+    <div class="input-field">
+      <input type="text" class="datepicker" id="attendanceDate" placeholder="Choose a date">
+      <label for="attendanceDate">Date</label>
+    </div>
+
+    <!-- Time dropdown -->
+    <div class="input-field">
+      <select id="timeSelect">
+        <!-- We'll fill this in via JS below -->
+      </select>
+      <label>Time</label>
+    </div>
+
+    <!-- Submit Button -->
+    <button id="submitAttendance" class="btn">Submit Attendance</button>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    $("#navbar-placeholder").load("Y12IAProdSpring/src/main/resources/static/html/nav.html", function(response, status, xhr) {
+      if(status === "error") {
+        console.log("Error loading navbar: " + xhr.status + " " + xhr.statusText);
+      }
+    });
+    // Materialize Init
+    $(document).ready(function() {
+      $('.modal').modal({ dismissible: false });
+      // Check if user is logged in. If not, open the modal. If yes, hide modal and show attendance form.
+      // For simplicity, we'll always show the modal at first:
+      $('.modal').modal('open');
+
+      $('.datepicker').datepicker({
+        autoClose: true,
+        disableWeekends: false, // or true if needed
+        showDaysInNextAndPreviousMonths: true
+      });
+
+      // Initialize select
+      $('select').formSelect();
+
+      // Populate time dropdown
+      const timeSelect = document.getElementById("timeSelect");
+      let startHour = 8, startMinute = 30;
+      while (startHour < 16 || (startHour === 16 && startMinute === 0)) {
+        let hh = String(startHour).padStart(2, '0');
+        let mm = String(startMinute).padStart(2, '0');
+        let timeStr = `${hh}:${mm}`;
+        let option = new Option(timeStr, timeStr);
+        timeSelect.add(option);
+        startMinute += 15;
+        if (startMinute === 60) {
+          startMinute = 0;
+          startHour++;
+        }
+      }
+      $('select').formSelect(); // re-init after adding options
+
+      // Submit attendance
+      $('#submitAttendance').click(function() {
+        const chosenDate = $('#attendanceDate').val();
+        const chosenTime = $('#timeSelect').val();
+        if (!chosenDate || !chosenTime) {
+          alert("Please select both a date and time.");
+          return;
+        }
+        $.post('/submitAttendance', { date: chosenDate, time: chosenTime }, function(response) {
+          if (response.success) {
+            alert("Attendance submitted successfully!");
+          } else {
+            alert("Error submitting attendance.");
+          }
+        });
+      });
+    });
+
+    // Existing login form code from your snippet
+    const loginForm = document.getElementById("loginForm");
+    const errorMessages = document.getElementById("errorMessages");
+
+    loginForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      errorMessages.innerHTML = "";
+      const email = loginForm.elements.email.value;
+      const password = loginForm.elements.password.value;
+
+      $.ajax({
+        url: '/login',
+        method: 'POST',
+        data: $(loginForm).serialize(),
+        dataType: 'json',
+        success: function(response) {
+          if (response.valid) {
+            $('#login-modal').modal('close');
+            // Show attendance form
+            document.getElementById("attendanceSection").style.display = "block";
+          } else {
+            displayError(response.error || "Invalid credentials");
+          }
+        },
+        error: function() {
+          displayError("An error occurred during login.");
+        }
+      });
+    });
+
+    function displayError(message) {
+      errorMessages.innerHTML += `<div class="error">${message}</div>`;
+    }
+  </script>
+</body>
+</html>

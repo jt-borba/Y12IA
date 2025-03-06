@@ -86,7 +86,7 @@ public class AttendanceController {
                 return response;
             }
 
-            // Retrieve parent's email for the given user (stub implementation)
+            // Retrieve parent's email for the given user 
             String parentEmail = getParentEmailForUser(userId);
             System.out.println("Debug: Retrieved parent's email: " + parentEmail + " for userId: " + userId);
 
