@@ -2,50 +2,14 @@
 <html>
 <head>
   <title>Attendance Reporting</title>
+  <!--Import Google Icon Font + Materialize CSS-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="/css/style.css">
-  <style>
-    /* Custom navbar height */
-    .navbar-custom {
-      background-color: #1D3D66; /* UCC-like blue */
-      height: 64px;             /* Typical Materialize nav height */
-    }
-    /* Let .nav-wrapper match the full navbar height */
-    .navbar-custom .nav-wrapper {
-      height: 100%;
-    }
-    /* Override brand-logo defaults so the image can fill the navbar height */
-    .navbar-custom .brand-logo {
-      height: 100%;
-      line-height: 0;           /* Prevent text-based vertical centering */
-      display: flex;
-      align-items: center;
-      padding-left: 10px;       /* Optional spacing from left edge */
-    }
-    /* Make the image fill the navbar height */
-    .navbar-custom .brand-logo img {
-      height: 100%;
-      width: auto;              /* Keep aspect ratio */
-    }
-  </style>
 </head>
 <body>
-
-<nav class="navbar-custom">
-  <div class="nav-wrapper">
-    <!-- Brand logo link -->
-    <a href="/" class="brand-logo">
-      <img src="/UCCLogo.jpg" alt="UCC Logo">
-    </a>
-    <ul id="nav-mobile" class="right hide-on-med-and-down">
-      <li><a href="/pass"><i class="material-icons">event</i></a></li>
-      <li><a href="/contact"><i class="material-icons">email</i></a></li>
-      <li><a href="/profile"><i class="material-icons">person</i></a></li>
-    </ul>
-  </div>
-</nav>
+  <div id="navbar-placeholder"></div>
 
   <!-- Login Modal -->
   <div class="modal" id="login-modal">
@@ -83,6 +47,7 @@
     <!-- Time dropdown -->
     <div class="input-field">
       <select id="timeSelect">
+        <!-- We'll fill this in via JS below -->
       </select>
       <label>Time</label>
     </div>
@@ -95,10 +60,16 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
+    $("#navbar-placeholder").load("Y12IAProdSpring/src/main/resources/static/html/nav.html", function(response, status, xhr) {
+      if(status === "error") {
+        console.log("Error loading navbar: " + xhr.status + " " + xhr.statusText);
+      }
+    });
     // Materialize Init
     $(document).ready(function() {
       $('.modal').modal({ dismissible: false });
       // Check if user is logged in. If not, open the modal. If yes, hide modal and show attendance form.
+      // For simplicity, we'll always show the modal at first:
       $('.modal').modal('open');
 
       $('.datepicker').datepicker({
@@ -145,6 +116,7 @@
       });
     });
 
+    // Existing login form code from your snippet
     const loginForm = document.getElementById("loginForm");
     const errorMessages = document.getElementById("errorMessages");
 
